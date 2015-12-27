@@ -1,0 +1,1 @@
+tsc --out .\build\OverlappingFeatureSpiderfier.js .\src\OverlappingFeatureSpiderfier.ts --sourceMap
