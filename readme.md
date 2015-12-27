@@ -1,9 +1,8 @@
 # Overlapping Feature Spiderfier
 
-### This is a version of https://github.com/jawj/OverlappingMarkerSpiderfier/ by [George MacKerron] (https://github.com/jawj/) that
-can be used with [Google Maps Data Layers] (https://developers.google.com/maps/documentation/javascript/datalayer), instead of the standard 
-Markers that the original library worked with.  It has been written in TypeScript rather than CoffeeScript, but the compiled JS can be downloaded from 
-https://github.com/slovely/OverlappingFeatureSpiderfier/build/OverlappingFeatureSpiderfier.js
+### This is a version of https://github.com/jawj/OverlappingMarkerSpiderfier/ by [George MacKerron] (https://github.com/jawj/) that can be used with [Google Maps Data Layers] (https://developers.google.com/maps/documentation/javascript/datalayer), instead of the standard Markers that the original library worked with.  
+
+**It has been written in TypeScript rather than CoffeeScript, but the compiled JS can be downloaded from https://github.com/slovely/OverlappingFeatureSpiderfier/blob/master/build/OverlappingFeatureSpiderfier.js**
 
 *If you are adding `google.maps.Marker` objects to your map then you should use the original library.*
 
@@ -66,7 +65,7 @@ The `options` argument is an optional `Object` specifying any options you want c
 
 *markersWontMove* and *markersWontHide* (defaults: `false`)
 
-** Data Layer Features do not have a built-in 'visible' property - this library assumes that all features have such a property set to a true/false value
+**Data Layer Features do not have a built-in 'visible' property - this library assumes that all features have such a property set to a true/false value
 using the `setProperty` function.**
 
 By default, change events for each added features `geometry` and visible property are observed (so that, if a spiderfied feature is moved or hidden, all spiderfied markers are unspiderfied, and the new position is respected where applicable).
@@ -93,25 +92,25 @@ This is the lowest number of features that will be fanned out into a spiral inst
 
 This determines the thickness of the lines joining spiderfied features to their original locations. 
 
-h3. Instance methods: managing features
+### Instance methods: managing features
 
 *addMarker(marker)*
 
-** Not required in this version **
+**Not required in this version**
 
 *removeMarker(marker)*
 
-** Not required in this version **
+**Not required in this version**
 
 *clearMarkers()*
 
-** Not required in this version **
+** Not required in this version**
 
 *getMarkers()*
 
-** Not implemented **
+**Not implemented**
 
-h3. Instance methods: managing listeners
+### Instance methods: managing listeners
 
 *addListener(event, listenerFunc)*
 
@@ -159,7 +158,7 @@ The return value of this method may change any time the zoom level changes, and 
 Note also that this method relies on the map's `Projection` object being available, and thus cannot be called until the map's first `idle` event fires.
 
 
-h3. Properties
+### Properties
 
 You can set the following properties on an OverlappingFeatureSpiderfier instance:
 
@@ -181,5 +180,5 @@ You can also get and set any of the options noted in the constructor function do
 
 As per the original library, this software is released under the "MIT licence":http://www.opensource.org/licenses/mit-license.php.
 
-* THE ORIGINAL AUTHOR OF THIS LIBRARY IS ON GITTIP, please direct thanks to him: https://www.gittip.com/jawj. *
+**THE ORIGINAL AUTHOR OF THIS LIBRARY IS ON GITTIP, please direct thanks to him: https://www.gittip.com/jawj.**
  
