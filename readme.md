@@ -32,9 +32,9 @@ var ofs = new OverlappingFeatureSpiderfier(map.data);
 Add a click handler to the OverlappingFeatureSpiderfier instance.  The function will be passed the raised google.maps.Data.MouseEvent object:
 
 ```
-ofs.addListener("click", function(event: google.maps.Data.MouseEvent) {
+ofs.addListener("click", function(event) {
   var theFeatureThatWasClicked = event.feature;
-}
+});
 ```
 
 You can also add listeners on the `spiderfy` and `unspiderfy` events, which will be passed an array of the features affected.

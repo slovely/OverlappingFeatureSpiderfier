@@ -1,8 +1,7 @@
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
-    __.prototype = b.prototype;
-    d.prototype = new __();
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
 var OverlappingFeatureSpiderfier = (function () {
     function OverlappingFeatureSpiderfier(layer, options) {
@@ -248,7 +247,7 @@ var OverlappingFeatureSpiderfier = (function () {
         spiderfiedMarkers = footPts.map(function (footPt) {
             footLl = _this.ptToLl(footPt);
             nearestMarkerDatum = _this.minExtract(markerData, function (md) { return _this.ptDistanceSq(md.markerPt, footPt); });
-            var marker = nearestMarkerDatum.marker, as = IExtendedFeature;
+            var marker = nearestMarkerDatum.marker;
             leg = new google.maps.Polyline({
                 map: _this.map,
                 path: [marker.getGeometry().get(), footLl],
@@ -268,7 +267,7 @@ var OverlappingFeatureSpiderfier = (function () {
         return this.trigger("spiderfy", spiderfiedMarkers, nonNearbyMarkers);
     };
     OverlappingFeatureSpiderfier.prototype.featureMouseOut = function (e) {
-        var feature = e.feature, as = IExtendedFeature;
+        var feature = e.feature;
         if (feature._omsData != null && feature._omsData.leg != null) {
             feature._omsData.leg.setOptions({
                 strokeColor: this.legColors.usual[this.map.getMapTypeId()],
@@ -277,7 +276,7 @@ var OverlappingFeatureSpiderfier = (function () {
         }
     };
     OverlappingFeatureSpiderfier.prototype.featureMouseOver = function (e) {
-        var feature = e.feature, as = IExtendedFeature;
+        var feature = e.feature;
         if (feature._omsData != null && feature._omsData.leg != null) {
             feature._omsData.leg.setOptions({
                 strokeColor: this.legColors.highlighted[this.map.getMapTypeId()],
@@ -289,7 +288,7 @@ var OverlappingFeatureSpiderfier = (function () {
         if (!event.feature["_oms"])
             return;
         var marker = event.feature;
-        var geo = marker.getGeometry(), as = google.maps.Data.Point;
+        var geo = marker.getGeometry();
         // Only interested in 'Point' features
         if (geo.getType() !== "Point")
             return;
@@ -309,7 +308,7 @@ var OverlappingFeatureSpiderfier = (function () {
             markerPt = this.llToPt(geo.get());
             for (_i = 0, _len = this.markers.length; _i < _len; _i++) {
                 var m = this.markers[_i];
-                var geo_1 = m.getGeometry(), as_1 = google.maps.Data.Point;
+                var geo_1 = m.getGeometry();
                 if (geo_1.getType() !== "Point")
                     continue;
                 ;
