@@ -4,10 +4,9 @@ var __extends = (this && this.__extends) || function (d, b) {
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
 var OverlappingFeatureSpiderfier = (function () {
-    function OverlappingFeatureSpiderfier(layer, options) {
+    function OverlappingFeatureSpiderfier(layers, options) {
         var _this = this;
         if (options === void 0) { options = null; }
-        this.layer = layer;
         this.options = options;
         this.markers = [];
         this.nearbyDistance = 20;
@@ -62,6 +61,12 @@ var OverlappingFeatureSpiderfier = (function () {
         this.lcH[google.maps.MapTypeId.HYBRID] = this.lcH[google.maps.MapTypeId.SATELLITE] = "#f00";
         this.lcU[google.maps.MapTypeId.TERRAIN] = this.lcU[google.maps.MapTypeId.ROADMAP] = "#444";
         this.lcH[google.maps.MapTypeId.TERRAIN] = this.lcH[google.maps.MapTypeId.ROADMAP] = "#f00";
+        if (!layers || layers.length === 0) {
+            throw "You must pass in at least one layer";
+        }
+        if (!(layers instanceof Array)) {
+            layers = [layers];
+        }
         // Update the default options with those passed in
         for (var opt in options) {
             if (!options.hasOwnProperty(opt))
@@ -69,18 +74,18 @@ var OverlappingFeatureSpiderfier = (function () {
             this[opt] = options[opt];
         }
         // Setup event handlers for click/add/remove features
-        layer.addListener("click", function (e) { return _this.processClick(e); });
-        layer.addListener("addfeature", function (e) { return _this.featureAdded(e); });
-        layer.addListener("removefeature", function (e) { return _this.featureRemoved(e); });
+        this.addListenerToLayers(layers, "click", function (e) { return _this.processClick(e); });
+        this.addListenerToLayers(layers, "addfeature", function (e) { return _this.featureAdded(e); });
+        this.addListenerToLayers(layers, "removefeature", function (e) { return _this.featureRemoved(e); });
         // Listen to mouse out/over events so we can un/highlight spiderfied legs.
-        layer.addListener("mouseout", function (e) { return _this.featureMouseOut(e); });
-        layer.addListener("mouseover", function (e) { return _this.featureMouseOver(e); });
+        this.addListenerToLayers(layers, "mouseout", function (e) { return _this.featureMouseOut(e); });
+        this.addListenerToLayers(layers, "mouseover", function (e) { return _this.featureMouseOver(e); });
         // Setup event handlers for features moving or being hidden (if required)
         if (!this.markersWontHide) {
-            layer.addListener("setgeometry", function (e) { return _this.markerChangeListener(e.feature, false); });
+            this.addListenerToLayers(layers, "setgeometry", function (e) { return _this.markerChangeListener(e.feature, false); });
         }
         if (!this.markersWontMove) {
-            layer.addListener("setproperty", function (e) {
+            this.addListenerToLayers(layers, "setproperty", function (e) {
                 // Only interested in 'visible' property
                 if (e.name === "visible") {
                     _this.markerChangeListener(e.feature, false);
@@ -88,8 +93,8 @@ var OverlappingFeatureSpiderfier = (function () {
             });
         }
         // Add any existing features on the layer
-        layer.forEach(function (f) { return _this.addFeature(f); });
-        this.map = layer.getMap();
+        layers.forEach(function (l) { return l.forEach(function (f) { return _this.addFeature(f); }); });
+        this.map = layers[0].getMap();
         // We need the layer to already have it's map set
         if (!this.map)
             throw "Layer map should be set before instantiating OverlappingFeatureSpiderfy!";
@@ -407,6 +412,11 @@ var OverlappingFeatureSpiderfier = (function () {
             result.push(i);
         }
         return result;
+    };
+    OverlappingFeatureSpiderfier.prototype.addListenerToLayers = function (layers, eventName, handler) {
+        for (var i = 0; i < layers.length; i++) {
+            layers[i].addListener(eventName, handler);
+        }
     };
     return OverlappingFeatureSpiderfier;
 })();

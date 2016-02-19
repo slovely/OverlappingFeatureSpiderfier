@@ -29,6 +29,12 @@ Create an OverlappingFeatureSpiderfier instance, passing in a google.maps.Data i
 var ofs = new OverlappingFeatureSpiderfier(map.data);
 ```
 
+**If you have more than one layer and you want all features to be spiderfied, pass in an array of layers instead like this:
+```
+var ofs = new OverlappingFeatureSpiderfier([myFirstLayer, mySecondLayer]);
+```
+
+
 Add a click handler to the OverlappingFeatureSpiderfier instance.  The function will be passed the raised google.maps.Data.MouseEvent object:
 
 ```

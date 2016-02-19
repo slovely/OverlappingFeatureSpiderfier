@@ -28,12 +28,22 @@ class OverlappingFeatureSpiderfier {
     private lcU = this.legColors.usual;
     private listeners = [];
 
-    constructor(public layer: google.maps.Data, private options: IOverlappingFeatureSpiderfyOptions = null) {
+    constructor(layer: google.maps.Data, options?: IOverlappingFeatureSpiderfyOptions)
+    constructor(layers: Array<google.maps.Data>, options?: IOverlappingFeatureSpiderfyOptions)
+    constructor(layers: any, private options: IOverlappingFeatureSpiderfyOptions = null) {
         this.lcU[google.maps.MapTypeId.HYBRID] = this.lcU[google.maps.MapTypeId.SATELLITE] = "#fff";
         this.lcH[google.maps.MapTypeId.HYBRID] = this.lcH[google.maps.MapTypeId.SATELLITE] = "#f00";
         this.lcU[google.maps.MapTypeId.TERRAIN] = this.lcU[google.maps.MapTypeId.ROADMAP] = "#444";
         this.lcH[google.maps.MapTypeId.TERRAIN] = this.lcH[google.maps.MapTypeId.ROADMAP] = "#f00";
 
+        if (!layers || layers.length === 0) {
+            throw "You must pass in at least one layer";
+        }
+
+        if (!(layers instanceof Array)) {
+            layers = [layers];
+        }
+        
         // Update the default options with those passed in
         for (let opt in options) {
             if (!options.hasOwnProperty(opt)) continue;
@@ -41,18 +51,18 @@ class OverlappingFeatureSpiderfier {
         }
 
         // Setup event handlers for click/add/remove features
-        layer.addListener("click", e => this.processClick(e));
-        layer.addListener("addfeature", e => this.featureAdded(e));
-        layer.addListener("removefeature", e => this.featureRemoved(e));
+        this.addListenerToLayers(layers, "click", e => this.processClick(e));
+        this.addListenerToLayers(layers, "addfeature", e => this.featureAdded(e));
+        this.addListenerToLayers(layers, "removefeature", e => this.featureRemoved(e));
         // Listen to mouse out/over events so we can un/highlight spiderfied legs.
-        layer.addListener("mouseout", e => this.featureMouseOut(e));
-        layer.addListener("mouseover", e => this.featureMouseOver(e));
+        this.addListenerToLayers(layers, "mouseout", e => this.featureMouseOut(e));
+        this.addListenerToLayers(layers, "mouseover", e => this.featureMouseOver(e));
         // Setup event handlers for features moving or being hidden (if required)
         if (!this.markersWontHide) {
-            layer.addListener("setgeometry", (e: google.maps.Data.SetGeometryEvent) => this.markerChangeListener(e.feature, false));
+            this.addListenerToLayers(layers, "setgeometry", (e: google.maps.Data.SetGeometryEvent) => this.markerChangeListener(e.feature, false));
         }
         if (!this.markersWontMove) {
-            layer.addListener("setproperty", (e: google.maps.Data.SetPropertyEvent) => {
+            this.addListenerToLayers(layers, "setproperty", (e: google.maps.Data.SetPropertyEvent) => {
                 // Only interested in 'visible' property
                 if (e.name === "visible") {
                     this.markerChangeListener(e.feature, false);
@@ -60,8 +70,8 @@ class OverlappingFeatureSpiderfier {
             });
         }
         // Add any existing features on the layer
-        layer.forEach(f => this.addFeature(f));
-        this.map = layer.getMap();
+        layers.forEach(l => l.forEach(f => this.addFeature(f)));
+        this.map = layers[0].getMap();
 
         // We need the layer to already have it's map set
         if (!this.map) throw "Layer map should be set before instantiating OverlappingFeatureSpiderfy!";
@@ -423,6 +433,11 @@ class OverlappingFeatureSpiderfier {
         return set.splice(bestIndex, 1)[0];
     }
 
+    private addListenerToLayers(layers: Array<google.maps.Data>, eventName: string, handler: (...args: any[]) => void): void {
+        for (let i = 0; i < layers.length; i++) {
+            layers[i].addListener(eventName, handler);
+        }
+    }
 }
 
 
