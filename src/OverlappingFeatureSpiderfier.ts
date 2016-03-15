@@ -1,3 +1,4 @@
+/// <reference path="../typings/google.maps.d.ts" />
 class OverlappingFeatureSpiderfier {
 
     private markers: Array<IExtendedFeature> = [];
