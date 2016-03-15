@@ -3,6 +3,7 @@ var __extends = (this && this.__extends) || function (d, b) {
     function __() { this.constructor = d; }
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
+/// <reference path="../typings/google.maps.d.ts" />
 var OverlappingFeatureSpiderfier = (function () {
     function OverlappingFeatureSpiderfier(layers, options) {
         var _this = this;
@@ -127,14 +128,14 @@ var OverlappingFeatureSpiderfier = (function () {
         var nDist = this.nearbyDistance;
         var pxSq = nDist * nDist;
         var geo = marker.getGeometry();
-        if (geo.getType() !== 'Point')
+        if (geo.getType() !== "Point")
             return [];
         var markerPt = this.llToPt(geo.get());
         var markers = [];
         for (var i = 0, len = this.markers.length; i < len; i++) {
             var m = this.markers[i];
             geo = m.getGeometry();
-            if (geo.getType() !== 'Point')
+            if (geo.getType() !== "Point")
                 continue;
             var pos = geo.get();
             if (m === marker || (m.getProperty("visible") === false)) {
@@ -317,7 +318,7 @@ var OverlappingFeatureSpiderfier = (function () {
                 if (geo_1.getType() !== "Point")
                     continue;
                 ;
-                if (!m.getProperty("visible")) {
+                if (m.getProperty("visible") === false) {
                     continue;
                 }
                 mPt = this.llToPt(geo_1.get());
@@ -419,7 +420,7 @@ var OverlappingFeatureSpiderfier = (function () {
         }
     };
     return OverlappingFeatureSpiderfier;
-})();
+}());
 var ProjHelper = (function (_super) {
     __extends(ProjHelper, _super);
     function ProjHelper(map) {
@@ -430,5 +431,5 @@ var ProjHelper = (function (_super) {
     ProjHelper.prototype.draw = function () {
     };
     return ProjHelper;
-})(google.maps.OverlayView);
+}(google.maps.OverlayView));
 //# sourceMappingURL=OverlappingFeatureSpiderfier.js.map
