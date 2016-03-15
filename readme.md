@@ -182,6 +182,12 @@ legColors.highlighted[mti.HYBRID] = legColors.highlighted[mti.SATELLITE] = legCo
 
 You can also get and set any of the options noted in the constructor function documentation above as properties on an OverlappingFeatureSpiderfier instance. However, for some of these options (e.g. `markersWontMove`) modifications won't be applied retroactively.
 
+## Contributors
+<sub>(these are people that have contributed to *this* version - many more contributed to the original).</sub>
+
+- Simon Lovely (https://github.com/slovely)
+- Brad Zacher (https://github.com/bradzacher)
+
 ## Licence
 
 As per the original library, this software is released under the "MIT licence":http://www.opensource.org/licenses/mit-license.php.
