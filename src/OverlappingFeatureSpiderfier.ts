@@ -301,7 +301,7 @@ class OverlappingFeatureSpiderfier {
                 let geo = m.getGeometry() as google.maps.Data.Point;
                 if (geo.getType() !== "Point") continue;;
 
-                if (!m.getProperty("visible")) {
+                if (m.getProperty("visible") === false) {
                     continue;
                 }
                 mPt = this.llToPt(geo.get());

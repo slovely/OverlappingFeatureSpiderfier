@@ -318,7 +318,7 @@ var OverlappingFeatureSpiderfier = (function () {
                 if (geo_1.getType() !== "Point")
                     continue;
                 ;
-                if (!m.getProperty("visible")) {
+                if (m.getProperty("visible") === false) {
                     continue;
                 }
                 mPt = this.llToPt(geo_1.get());
