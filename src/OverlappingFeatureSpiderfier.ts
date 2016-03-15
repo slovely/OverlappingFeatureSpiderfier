@@ -107,14 +107,14 @@ class OverlappingFeatureSpiderfier {
         let nDist = this.nearbyDistance;
         let pxSq = nDist * nDist;
         let geo = marker.getGeometry();
-        if (geo.getType() !== 'Point') return [];
+        if (geo.getType() !== "Point") return [];
 
         let markerPt = this.llToPt((<google.maps.Data.Point>geo).get());
         let markers = [];
         for (let i = 0, len = this.markers.length; i < len; i++) {
             let m = this.markers[i];
             geo = m.getGeometry();
-            if (geo.getType() !== 'Point') continue;
+            if (geo.getType() !== "Point") continue;
             let pos = (<google.maps.Data.Point>geo).get();
 
             if (m === marker || (m.getProperty("visible") === false)) {
