@@ -51,27 +51,11 @@ class OverlappingFeatureSpiderfier {
             this[opt] = options[opt];
         }
 
-        // Setup event handlers for click/add/remove features
-        this.addListenerToLayers(layers, "click", e => this.processClick(e));
-        this.addListenerToLayers(layers, "addfeature", e => this.featureAdded(e));
-        this.addListenerToLayers(layers, "removefeature", e => this.featureRemoved(e));
-        // Listen to mouse out/over events so we can un/highlight spiderfied legs.
-        this.addListenerToLayers(layers, "mouseout", e => this.featureMouseOut(e));
-        this.addListenerToLayers(layers, "mouseover", e => this.featureMouseOver(e));
-        // Setup event handlers for features moving or being hidden (if required)
-        if (!this.markersWontHide) {
-            this.addListenerToLayers(layers, "setgeometry", (e: google.maps.Data.SetGeometryEvent) => this.markerChangeListener(e.feature, false));
+        for (let i = 0; i < layers.length; i++) {
+            var layer = layers[i];
+            this.addLayer(layer);
         }
-        if (!this.markersWontMove) {
-            this.addListenerToLayers(layers, "setproperty", (e: google.maps.Data.SetPropertyEvent) => {
-                // Only interested in 'visible' property
-                if (e.name === "visible") {
-                    this.markerChangeListener(e.feature, false);
-                }
-            });
-        }
-        // Add any existing features on the layer
-        layers.forEach(l => l.forEach(f => this.addFeature(f)));
+
         this.map = layers[0].getMap();
 
         // We need the layer to already have it's map set
@@ -79,6 +63,30 @@ class OverlappingFeatureSpiderfier {
         this.projHelper = new ProjHelper(this.map);
         // unspiderfy when the map is clicked/changed
         ["click", "zoom_changed", "maptypeid_changed"].forEach((e) => google.maps.event.addListener(this.map, e, () => this.unspiderfy()));
+    }
+
+    public addLayer(layer: google.maps.Data): void {
+        // Setup event handlers for click/add/remove features
+        layer.addListener("click", e => this.processClick(e));
+        layer.addListener("addfeature", e => this.featureAdded(e));
+        layer.addListener("removefeature", e => this.featureRemoved(e));
+        // Listen to mouse out/over events so we can un/highlight spiderfied legs.
+        layer.addListener("mouseout", e => this.featureMouseOut(e));
+        layer.addListener("mouseover", e => this.featureMouseOver(e));
+        // Setup event handlers for features moving or being hidden (if required)
+        if (!this.markersWontHide) {
+            layer.addListener("setgeometry", (e: google.maps.Data.SetGeometryEvent) => this.markerChangeListener(e.feature, false));
+        }
+        if (!this.markersWontMove) {
+            layer.addListener("setproperty", (e: google.maps.Data.SetPropertyEvent) => {
+                // Only interested in 'visible' property
+                if (e.name === "visible") {
+                    this.markerChangeListener(e.feature, false);
+                }
+            });
+        }
+        // Add any existing features on the layer
+        layer.forEach(f => this.addFeature(f));
     }
 
     public addListener(event, func) {
@@ -301,7 +309,7 @@ class OverlappingFeatureSpiderfier {
                 let geo = m.getGeometry() as google.maps.Data.Point;
                 if (geo.getType() !== "Point") continue;;
 
-                if (m.getProperty("visible") === false) {
+                if (!m.getProperty("visible")) {
                     continue;
                 }
                 mPt = this.llToPt(geo.get());
@@ -432,12 +440,6 @@ class OverlappingFeatureSpiderfier {
             }
         }
         return set.splice(bestIndex, 1)[0];
-    }
-
-    private addListenerToLayers(layers: Array<google.maps.Data>, eventName: string, handler: (...args: any[]) => void): void {
-        for (let i = 0; i < layers.length; i++) {
-            layers[i].addListener(eventName, handler);
-        }
     }
 }
 

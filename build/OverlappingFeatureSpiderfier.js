@@ -74,27 +74,10 @@ var OverlappingFeatureSpiderfier = (function () {
                 continue;
             this[opt] = options[opt];
         }
-        // Setup event handlers for click/add/remove features
-        this.addListenerToLayers(layers, "click", function (e) { return _this.processClick(e); });
-        this.addListenerToLayers(layers, "addfeature", function (e) { return _this.featureAdded(e); });
-        this.addListenerToLayers(layers, "removefeature", function (e) { return _this.featureRemoved(e); });
-        // Listen to mouse out/over events so we can un/highlight spiderfied legs.
-        this.addListenerToLayers(layers, "mouseout", function (e) { return _this.featureMouseOut(e); });
-        this.addListenerToLayers(layers, "mouseover", function (e) { return _this.featureMouseOver(e); });
-        // Setup event handlers for features moving or being hidden (if required)
-        if (!this.markersWontHide) {
-            this.addListenerToLayers(layers, "setgeometry", function (e) { return _this.markerChangeListener(e.feature, false); });
+        for (var i = 0; i < layers.length; i++) {
+            var layer = layers[i];
+            this.addLayer(layer);
         }
-        if (!this.markersWontMove) {
-            this.addListenerToLayers(layers, "setproperty", function (e) {
-                // Only interested in 'visible' property
-                if (e.name === "visible") {
-                    _this.markerChangeListener(e.feature, false);
-                }
-            });
-        }
-        // Add any existing features on the layer
-        layers.forEach(function (l) { return l.forEach(function (f) { return _this.addFeature(f); }); });
         this.map = layers[0].getMap();
         // We need the layer to already have it's map set
         if (!this.map)
@@ -103,6 +86,30 @@ var OverlappingFeatureSpiderfier = (function () {
         // unspiderfy when the map is clicked/changed
         ["click", "zoom_changed", "maptypeid_changed"].forEach(function (e) { return google.maps.event.addListener(_this.map, e, function () { return _this.unspiderfy(); }); });
     }
+    OverlappingFeatureSpiderfier.prototype.addLayer = function (layer) {
+        var _this = this;
+        // Setup event handlers for click/add/remove features
+        layer.addListener("click", function (e) { return _this.processClick(e); });
+        layer.addListener("addfeature", function (e) { return _this.featureAdded(e); });
+        layer.addListener("removefeature", function (e) { return _this.featureRemoved(e); });
+        // Listen to mouse out/over events so we can un/highlight spiderfied legs.
+        layer.addListener("mouseout", function (e) { return _this.featureMouseOut(e); });
+        layer.addListener("mouseover", function (e) { return _this.featureMouseOver(e); });
+        // Setup event handlers for features moving or being hidden (if required)
+        if (!this.markersWontHide) {
+            layer.addListener("setgeometry", function (e) { return _this.markerChangeListener(e.feature, false); });
+        }
+        if (!this.markersWontMove) {
+            layer.addListener("setproperty", function (e) {
+                // Only interested in 'visible' property
+                if (e.name === "visible") {
+                    _this.markerChangeListener(e.feature, false);
+                }
+            });
+        }
+        // Add any existing features on the layer
+        layer.forEach(function (f) { return _this.addFeature(f); });
+    };
     OverlappingFeatureSpiderfier.prototype.addListener = function (event, func) {
         var _base;
         ((_base = this.listeners)[event] != null ? (_base = this.listeners)[event] : _base[event] = []).push(func);
@@ -318,7 +325,7 @@ var OverlappingFeatureSpiderfier = (function () {
                 if (geo_1.getType() !== "Point")
                     continue;
                 ;
-                if (m.getProperty("visible") === false) {
+                if (!m.getProperty("visible")) {
                     continue;
                 }
                 mPt = this.llToPt(geo_1.get());
@@ -414,13 +421,8 @@ var OverlappingFeatureSpiderfier = (function () {
         }
         return result;
     };
-    OverlappingFeatureSpiderfier.prototype.addListenerToLayers = function (layers, eventName, handler) {
-        for (var i = 0; i < layers.length; i++) {
-            layers[i].addListener(eventName, handler);
-        }
-    };
     return OverlappingFeatureSpiderfier;
-}());
+})();
 var ProjHelper = (function (_super) {
     __extends(ProjHelper, _super);
     function ProjHelper(map) {
@@ -431,5 +433,5 @@ var ProjHelper = (function (_super) {
     ProjHelper.prototype.draw = function () {
     };
     return ProjHelper;
-}(google.maps.OverlayView));
+})(google.maps.OverlayView);
 //# sourceMappingURL=OverlappingFeatureSpiderfier.js.map

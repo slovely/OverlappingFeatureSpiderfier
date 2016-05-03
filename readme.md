@@ -38,7 +38,7 @@ var ofs = new OverlappingFeatureSpiderfier([myFirstLayer, mySecondLayer]);
 Add a click handler to the OverlappingFeatureSpiderfier instance.  The function will be passed the raised google.maps.Data.MouseEvent object:
 
 ```
-ofs.addListener("click", function(event) {
+ofs.addListener("click", function(event: google.maps.Data.MouseEvent) {
   var theFeatureThatWasClicked = event.feature;
 });
 ```
@@ -54,6 +54,13 @@ ofs.addListener('unspiderfy', function(features) {
 
 Unlike the original library, you **do not** need to tell the OverlappingFeatureSpiderfier when features are added or removed from the Data Layer, as
 the OverlappingFeatureSpiderfier will subscribe to the `addfeature` and `removefeature` events.
+
+It is possible to add another layer to the spiderfier after creation by passing the new layer to the `addLayer` method like this:
+
+```
+var myNewLayer = new google.maps.Data();
+ofs.addLayer(myNewLayer);
+```
 
 ## DOCS
 
