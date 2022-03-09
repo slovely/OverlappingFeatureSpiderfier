@@ -342,7 +342,8 @@ class OverlappingFeatureSpiderfier {
     }
 
     private addFeature(feature: IExtendedFeature) {
-        if (feature.getGeometry().getType() !== "Point") return;
+        var geo = feature.getGeometry();
+        if (!geo || geo.getType() !== "Point") return;
         if (feature._oms) return;
 
         feature._oms = true;
