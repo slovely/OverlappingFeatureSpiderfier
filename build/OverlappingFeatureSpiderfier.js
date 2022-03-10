@@ -1,10 +1,18 @@
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
 /// <reference path="../typings/google.maps.d.ts" />
-var OverlappingFeatureSpiderfier = (function () {
+var OverlappingFeatureSpiderfier = /** @class */ (function () {
     function OverlappingFeatureSpiderfier(layers, options) {
         var _this = this;
         if (options === void 0) { options = null; }
@@ -351,7 +359,8 @@ var OverlappingFeatureSpiderfier = (function () {
         this.addFeature(evt.feature);
     };
     OverlappingFeatureSpiderfier.prototype.addFeature = function (feature) {
-        if (feature.getGeometry().getType() !== "Point")
+        var geo = feature.getGeometry();
+        if (!geo || geo.getType() !== "Point")
             return;
         if (feature._oms)
             return;
@@ -422,16 +431,17 @@ var OverlappingFeatureSpiderfier = (function () {
         return result;
     };
     return OverlappingFeatureSpiderfier;
-})();
-var ProjHelper = (function (_super) {
+}());
+var ProjHelper = /** @class */ (function (_super) {
     __extends(ProjHelper, _super);
     function ProjHelper(map) {
-        _super.call(this);
-        this.map = map;
-        this.setMap(map);
+        var _this = _super.call(this) || this;
+        _this.map = map;
+        _this.setMap(map);
+        return _this;
     }
     ProjHelper.prototype.draw = function () {
     };
     return ProjHelper;
-})(google.maps.OverlayView);
+}(google.maps.OverlayView));
 //# sourceMappingURL=OverlappingFeatureSpiderfier.js.map
