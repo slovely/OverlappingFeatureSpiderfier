@@ -194,6 +194,7 @@ You can also get and set any of the options noted in the constructor function do
 
 - Simon Lovely (https://github.com/slovely)
 - Brad Zacher (https://github.com/bradzacher)
+- Nick Albrecht (https://github.com/nickalbrecht)
 
 ## Licence
 
